@@ -29,9 +29,10 @@ require.config({
 require(['jquery', 'gonrin', 'app/router',
 		'app/bases/nav/NavbarView',
 		'text!app/bases/tpl/layout.html',
-		'i18n!app/nls/app'
+		'i18n!app/nls/app',
+		'app/view/IndexView',
 	],
-	function ($, Gonrin, Router, NavView, layout, lang) {
+	function ($, Gonrin, Router, NavView, layout, lang,IndexView) {
 		$.ajaxSetup({
 			headers: {
 				'content-type': 'application/json'
@@ -47,7 +48,9 @@ require(['jquery', 'gonrin', 'app/router',
 			initialize: function () {
 				console.log("Applicaiton initialize");
 				this.getRouter().registerAppRoute();
-				this.getCurrentUser();
+				this.postLogin()
+				// console.log(this.serviceURL);
+				// this.getCurrentUser();
 				
 			},
 			getParameterUrl: function (parameter, url) {
@@ -77,24 +80,27 @@ require(['jquery', 'gonrin', 'app/router',
 			postLogin: function (data) {
 				var self = this;
 
-				$('body').html(layout);
-				self.currentUser = new Gonrin.User(data);
+				// $('body').html(layout);
+				// self.currentUser = new Gonrin.User(data);
 				this.$header = $('body').find(".page-header");
 				this.$content = $('body').find(".content-area");
 				this.$navbar = $('body').find(".page-navbar");
 				var $user = self.$header.find("span.username");
-				if (!data.fullname || data.fullname === "") {
-					data.fullname = data.id;
-				}
-				self.$header.find("span.username").html(data.fullname);
+				// if (!data.fullname || data.fullname === "") {
+				// 	data.fullname = data.id;
+				// }
+				// self.$header.find("span.username").html(data.fullname);
 				this.$toolbox = $('body').find(".tools-area");
 				
 				this.navView = new NavView({
 					el: this.$navbar
 				});
-				self.navView.render();
+				this.IndexView = new IndexView({ el:$('body') })
+				// console.log(this.IndexView);
+				this.IndexView.render()
+				// self.navView.render();
 			}
 		});
-		Backbone.history.start();
+		// Backbone.history.start();
 
 	});
